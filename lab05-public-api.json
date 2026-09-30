@@ -1,0 +1,46 @@
+{
+  "info": {
+    "name": "Lab05 Public API (jsonplaceholder)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /users — 3 oracle",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус код 200 байна\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Хариу нь массив байна\", function () {",
+              "    pm.expect(pm.response.json()).to.be.an(\"array\");",
+              "});",
+              "pm.test(\"Эхний хэрэглэгчийн нэр Leanne Graham байна\", function () {",
+              "    pm.expect(pm.response.json()[0].name).to.eql(\"Leanne Graham\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "users"
+          ]
+        }
+      }
+    }
+  ]
+}
