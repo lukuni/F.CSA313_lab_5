@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Lab05 Registration",
-    "description": "F.CSA313 Лаб 5 — POST /registrations функцийн тестүүд. Тест бүр өөрийн setup-тай, бие даасан.",
+    "name": "Lab05 Registration (FAIL — зориуд буруу oracle)",
+    "description": "Зориуд алдаатай хувилбар: T01-ийн статус oracle 201-ийн оронд 200 гэж хүлээнэ. CI quality gate-ийг шалгахад ашиглана.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -78,8 +78,8 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Статус код 201 байна\", function () {",
-                  "    pm.response.to.have.status(201);",
+                  "pm.test(\"Статус код 200 байна (ЗОРИУД БУРУУ oracle)\", function () {",
+                  "    pm.response.to.have.status(200);",
                   "});",
                   "pm.test(\"result нь OK байна\", function () {",
                   "    pm.expect(pm.response.json().result).to.eql(\"OK\");",
