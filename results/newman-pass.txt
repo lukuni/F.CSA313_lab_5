@@ -1,0 +1,138 @@
+newman
+
+Lab05 Registration
+
+❏ T01 Урьдач нөхцөл хангасан идэвхтэй оюутан бүртгүүлэхэд 201 OK
+↳ Setup: идэвхтэй оюутан B231234567 (CS201 үзсэн)
+  PUT http://localhost:3000/students/B231234567 [200 OK, 178B, 17ms]
+
+↳ Setup: CS313 хичээл (урьдач CS201)
+  PUT http://localhost:3000/courses/CS313 [200 OK, 178B, 2ms]
+
+↳ POST: B231234567 → CS313
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
+  ✓  Статус код 201 байна
+  ✓  result нь OK байна
+  ✓  registrationID тоо байна (яг утгыг шалгахгүй)
+
+❏ T02 Байхгүй оюутан бүртгүүлэхэд ERROR_NO_STUDENT
+↳ Setup: CS313 хичээл (урьдач CS201)
+  PUT http://localhost:3000/courses/CS313 [200 OK, 178B, 1ms]
+
+↳ POST: B000000000 (байхгүй) → CS313
+  POST http://localhost:3000/registrations [200 OK, 192B, 2ms]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_NO_STUDENT байна
+
+❏ T03 Идэвхгүй оюутан бүртгүүлэхэд ERROR_INACTIVE_STUDENT
+↳ Setup: идэвхгүй оюутан B230000003 (CS201 үзсэн)
+  PUT http://localhost:3000/students/B230000003 [200 OK, 178B, 2ms]
+
+↳ Setup: CS313 хичээл (урьдач CS201)
+  PUT http://localhost:3000/courses/CS313 [200 OK, 178B, 1ms]
+
+↳ POST: B230000003 → CS313
+  POST http://localhost:3000/registrations [200 OK, 198B, 1ms]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_INACTIVE_STUDENT байна
+
+❏ T04 Байхгүй хичээлд бүртгүүлэхэд ERROR_NO_COURSE
+↳ Setup: идэвхтэй оюутан B230000004
+  PUT http://localhost:3000/students/B230000004 [200 OK, 178B, 3ms]
+
+↳ POST: B230000004 → CS999 (байхгүй)
+  POST http://localhost:3000/registrations [200 OK, 191B, 1ms]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_NO_COURSE байна
+
+❏ T05 Урьдач нөхцлийн зарим нь дутуу бол ERROR_PREREQUISITES
+↳ Setup: идэвхтэй оюутан B230000005 (зөвхөн CS201 үзсэн)
+  PUT http://localhost:3000/students/B230000005 [200 OK, 178B, 1ms]
+
+↳ Setup: CS401 хичээл (урьдач CS201, CS202)
+  PUT http://localhost:3000/courses/CS401 [200 OK, 178B, 1ms]
+
+↳ POST: B230000005 → CS401
+  POST http://localhost:3000/registrations [200 OK, 215B, 0µs]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_PREREQUISITES байна
+  ✓  missing нь ['CS202'] байна
+
+❏ T06 Идэвхгүй оюутан байхгүй хичээлд бүртгүүлэхэд ERROR_INACTIVE_STUDENT (давхар алдаа)
+↳ Setup: идэвхгүй оюутан B230000006
+  PUT http://localhost:3000/students/B230000006 [200 OK, 178B, 1ms]
+
+↳ POST: B230000006 → CS999 (байхгүй)
+  POST http://localhost:3000/registrations [200 OK, 198B, 2ms]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_INACTIVE_STUDENT байна
+
+❏ T07 Урьдач хангаагүй идэвхгүй оюутан бүртгүүлэхэд ERROR_INACTIVE_STUDENT (давхар алдаа)
+↳ Setup: идэвхгүй оюутан B230000007 (юу ч үзээгүй)
+  PUT http://localhost:3000/students/B230000007 [200 OK, 178B, 2ms]
+
+↳ Setup: CS313 хичээл (урьдач CS201)
+  PUT http://localhost:3000/courses/CS313 [200 OK, 178B, 1ms]
+
+↳ POST: B230000007 → CS313
+  POST http://localhost:3000/registrations [200 OK, 198B, 0µs]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_INACTIVE_STUDENT байна
+
+❏ T08 Урьдач нөхцөлгүй хичээлд хоосон coursesTaken-тэй оюутан бүртгүүлэхэд 201 OK
+↳ Setup: идэвхтэй оюутан B230000008 (coursesTaken хоосон)
+  PUT http://localhost:3000/students/B230000008 [200 OK, 178B, 0µs]
+
+↳ Setup: CS101 хичээл (урьдачгүй)
+  PUT http://localhost:3000/courses/CS101 [200 OK, 178B, 1ms]
+
+↳ POST: B230000008 → CS101
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
+  ✓  Статус код 201 байна
+  ✓  result нь OK байна
+  ✓  registrationID тоо байна (яг утгыг шалгахгүй)
+
+❏ T09 Хоосон coursesTaken-тэй оюутан урьдачтай хичээлд бүртгүүлэхэд ERROR_PREREQUISITES
+↳ Setup: идэвхтэй оюутан B230000009 (coursesTaken хоосон)
+  PUT http://localhost:3000/students/B230000009 [200 OK, 178B, 1ms]
+
+↳ Setup: CS313 хичээл (урьдач CS201)
+  PUT http://localhost:3000/courses/CS313 [200 OK, 178B, 1ms]
+
+↳ POST: B230000009 → CS313
+  POST http://localhost:3000/registrations [200 OK, 215B, 1ms]
+  ✓  Статус код 200 байна
+  ✓  result нь ERROR_PREREQUISITES байна
+  ✓  missing нь ['CS201'] байна
+
+❏ T10 courseID талбар дутуу бол 400 ERROR_BAD_REQUEST
+↳ POST: зөвхөн studentID
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  ✓  Статус код 400 байна
+  ✓  result нь ERROR_BAD_REQUEST байна
+
+❏ T11 Буруу JSON илгээхэд 400 ERROR_BAD_JSON
+↳ POST: эвдэрсэн JSON
+  POST http://localhost:3000/registrations [400 Bad Request, 199B, 1ms]
+  ✓  Статус код 400 байна
+  ✓  result нь ERROR_BAD_JSON байна
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              26 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              11 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │               0 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              26 │               0 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 330ms                                   │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 616B (approx)                          │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 2ms [min: 1ms, max: 17ms, s.d.: 3ms] │
+└─────────────────────────────────────────────────────────────┘
